@@ -26,6 +26,7 @@ module.exports = async (req, res) => {
   try {
     const response = await fetch(tokenUrl);
     const data = await response.json();
+    console.log(data)
     const llt = data.access_token;
     await bot.telegram.sendMessage(
       CHAT_ID,
