@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     client_id=${process.env.APP_ID}
     &client_secret=${process.env.APP_SECRET}
     &code=${code}
-    &grant_type=fb_exchange_token`;
+    &redirect_uri=https://vercel-tokens-catcher.vercel.app/api/fb-webhook`;
 
   if (!code) {
     return res.status(400).send('Missing code');
