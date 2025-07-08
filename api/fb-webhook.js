@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
 
     res.status(200).send(`Token отправлен в Telegram!\nToken: ${access_token}`);
   } catch (error) {
-    console.error('Ошибка:', error);
+    console.error('token:', process.env.BOT_TOKEN, 'Ошибка:', error);
     res.status(500).send('Ошибка при отправке токена');
   }
 };
