@@ -1,11 +1,8 @@
 const APP_ID = process.env.APP_ID || "771512691871130"; // Из переменных окружения
-const REDIRECT_URI = "https://vercel-tokens-catcher.vercel.app/api/fb-webhook";
+const REDIRECT_URI = "https://vercel-tokens-catcher.vercel.app/api/ig-webhook";
 const SCOPES = [
-  "pages_show_list",
-  "business_management",
-  "instagram_basic",
-  "instagram_manage_insights",
-  "pages_read_engagement",
+  "instagram_business_basic",
+  "instagram_business_manage_insights",
 ].join(",");
 
 const params = new URLSearchParams({
@@ -16,6 +13,6 @@ const params = new URLSearchParams({
   display: "popup",
 });
 
-const authUrl = `https://www.facebook.com/v23.0/dialog/oauth?${params.toString()}`;
+const authUrl = `https://www.instagram.com/oauth/authorize?${params.toString()}`;
 
 console.log(authUrl);
