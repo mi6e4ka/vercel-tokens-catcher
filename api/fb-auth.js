@@ -21,4 +21,6 @@ module.exports = async (req, res) => {
   const authUrl = `https://www.facebook.com/v23.0/dialog/oauth?${params.toString()}`;
 
   console.log(authUrl);
+
+  res.redirect(302, authUrl);
 };

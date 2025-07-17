@@ -18,4 +18,6 @@ module.exports = async (req, res) => {
   const authUrl = `https://www.instagram.com/oauth/authorize?${params.toString()}`;
 
   console.log(authUrl);
+
+  res.redirect(302, authUrl);
 };
