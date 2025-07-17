@@ -3,6 +3,8 @@ const { Telegraf } = require("telegraf");
 const BOT_TOKEN = process.env.BOT_TOKEN || "";
 const CHAT_ID = process.env.CHAT_ID || "";
 
+const redirectUri = "https://vercel-tokens-catcher.vercel.app/api/ig-webhook";
+
 const bot = new Telegraf(BOT_TOKEN);
 
 module.exports = async (req, res) => {
@@ -12,15 +14,39 @@ module.exports = async (req, res) => {
 
   const { code } = req.query;
 
-  const tokenUrl = `https://graph.instagram.com/v23.0/oauth/access_token?client_id=${process.env.IG_APP_ID}&client_secret=${process.env.IG_APP_SECRET}&code=${code}&redirect_uri=https://vercel-tokens-catcher.vercel.app/api/ig-webhook`;
-
   if (!code) {
     return res.status(400).send("Missing code");
   }
 
   try {
-    const response = await fetch(tokenUrl);
-    const data = await response.json();
+    // short lived token (1h)
+    const formData = new URLSearchParams();
+    formData.append("client_id", process.env.IG_APP_ID);
+    formData.append("client_secret", process.env.IG_APP_SECRET);
+    formData.append("grant_type", "authorization_code");
+    formData.append("redirect_uri", redirectUri);
+    formData.append("code", code);
+    let response = await fetch("https://api.instagram.com/oauth/access_token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    let data = await response.json();
+    console.log(data);
+    const slt = data.access_token;
+
+    // long lived token (60d)
+
+    const tokenUrl = `https://graph.instagram.com/v23.0/oauth/access_token?grant_type=ig_exchange_token&client_secret=${process.env.IG_APP_SECRET}&access_token=${slt}`;
+    response = await fetch(tokenUrl);
+    data = await response.json();
     console.log(data);
     const llt = data.access_token;
     await bot.telegram.sendMessage(
