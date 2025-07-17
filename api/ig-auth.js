@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-  const APP_ID = process.env.APP_ID || "771512691871130"; // Из переменных окружения
+  const APP_ID = process.env.IG_APP_ID; // Из переменных окружения
   const REDIRECT_URI =
     "https://vercel-tokens-catcher.vercel.app/api/ig-webhook";
   const SCOPES = [
