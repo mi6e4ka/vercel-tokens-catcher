@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
 
     // long lived token (60d)
 
-    const tokenUrl = `https://graph.instagram.com/v23.0/oauth/access_token?grant_type=ig_exchange_token&client_secret=${process.env.IG_APP_SECRET}&access_token=${slt}`;
+    const tokenUrl = `https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.IG_APP_SECRET}&access_token=${slt}`;
     response = await fetch(tokenUrl);
     data = await response.json();
     console.log(data);
