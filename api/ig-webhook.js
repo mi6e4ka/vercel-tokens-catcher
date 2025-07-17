@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
 
   const { code } = req.query;
 
-  const tokenUrl = `https://graph.instagram.com/v23.0/oauth/access_token?client_id=${process.env.IG_APP_ID}&client_secret=${process.env.IG_APP_SECRET}&code=${code}&redirect_uri=https://vercel-tokens-catcher.vercel.app/api/fb-webhook`;
+  const tokenUrl = `https://graph.instagram.com/v23.0/oauth/access_token?client_id=${process.env.IG_APP_ID}&client_secret=${process.env.IG_APP_SECRET}&code=${code}&redirect_uri=https://vercel-tokens-catcher.vercel.app/api/ig-webhook`;
 
   if (!code) {
     return res.status(400).send("Missing code");
@@ -21,6 +21,7 @@ module.exports = async (req, res) => {
   try {
     const response = await fetch(tokenUrl);
     const data = await response.json();
+    console.log(data);
     const llt = data.access_token;
     await bot.telegram.sendMessage(
       CHAT_ID,
